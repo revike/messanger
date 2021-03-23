@@ -8,3 +8,4 @@ project/settings.py
 venv
 env
 ./.env
+server_base.sqlite3

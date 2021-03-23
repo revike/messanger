@@ -9,51 +9,57 @@ from common.variables import SERVER_DATABASE
 class ServerDB:
 
     class AllUsers:
-        def __init__(self, username):
-            self.name = username
-            self.last_login = datetime.now()
+        user, last_login = None, None
+
+        def __init__(self, user):
             self.id = None
+            self.user = user
+            self.last_login = datetime.now()
 
     class ActiveUsers:
-        def __init__(self, user_id, ip_address, port, login_time):
-            self.user = user_id
-            self.ip_address = ip_address
-            self.port = port
-            self.login_time = login_time
-            self.id = None
+        login_time, ip, port = None, None, None
 
-    class LoginHistory:
-        def __init__(self, name, date, ip, port):
+        def __init__(self, user, ip, port, login_time):
             self.id = None
-            self.name = name
-            self.date_time = date
+            self.user = user
             self.ip = ip
             self.port = port
+            self.login_time = login_time
+
+    class LoginHistory:
+        date_conn, ip, port = None, None, None
+
+        def __init__(self, user, ip, port, date_conn):
+            self.id = None
+            self.user = user
+            self.ip = ip
+            self.port = port
+            self.date_conn = date_conn
 
     def __init__(self):
         self.database_engine = create_engine(SERVER_DATABASE, echo=False, pool_recycle=7200)
         self.metadata = MetaData()
 
-        users_table = Table('Users', self.metadata,
+        users_table = Table('All_users', self.metadata,
                             Column('id', Integer, primary_key=True),
-                            Column('name', String, unique=True),
+                            Column('user', String, unique=True),
                             Column('last_login', DateTime)
                             )
 
         active_users_table = Table('Active_users', self.metadata,
                                    Column('id', Integer, primary_key=True),
-                                   Column('user', ForeignKey('Users.id'), unique=True),
-                                   Column('ip_address', String),
+                                   Column('user', ForeignKey('All_users.id'), unique=True),
+                                   Column('ip', String),
                                    Column('port', Integer),
                                    Column('login_time', DateTime)
                                    )
 
         user_login_history = Table('Login_history', self.metadata,
                                    Column('id', Integer, primary_key=True),
-                                   Column('name', ForeignKey('Users.id')),
-                                   Column('date_time', DateTime),
+                                   Column('user', ForeignKey('All_users.id')),
                                    Column('ip', String),
-                                   Column('port', String)
+                                   Column('port', String),
+                                   Column('date_conn', DateTime)
                                    )
 
         self.metadata.create_all(self.database_engine)
@@ -62,61 +68,61 @@ class ServerDB:
         mapper(self.ActiveUsers, active_users_table)
         mapper(self.LoginHistory, user_login_history)
 
-        Session = sessionmaker(bind=self.database_engine)
-        self.session = Session()
+        session = sessionmaker(bind=self.database_engine)
+        self.session = session()
 
         self.session.query(self.ActiveUsers).delete()
         self.session.commit()
 
-    def user_login(self, username, ip_address, port):
+    def user_login(self, name, ip, port):
 
-        rez = self.session.query(self.AllUsers).filter_by(name=username)
+        rez = self.session.query(self.AllUsers).filter_by(user=name)
 
         if rez.count():
             user = rez.first()
             user.last_login = datetime.now()
         else:
-            user = self.AllUsers(username)
+            user = self.AllUsers(user=name)
             self.session.add(user)
             self.session.commit()
 
-        new_active_user = self.ActiveUsers(user.id, ip_address, port, datetime.now())
+        new_active_user = self.ActiveUsers(user.id, ip, port, datetime.now())
         self.session.add(new_active_user)
 
-        history = self.LoginHistory(user.id, datetime.now(), ip_address, port)
+        history = self.LoginHistory(user.id, ip, port, datetime.now())
         self.session.add(history)
 
         self.session.commit()
 
-    def user_logout(self, username):
-        user = self.session.query(self.AllUsers).filter_by(name=username).first()
+    def user_logout(self, name):
+        user = self.session.query(self.AllUsers).filter_by(user=name).first()
         self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
         self.session.commit()
 
     def users_list(self):
         query = self.session.query(
-            self.AllUsers.name,
+            self.AllUsers.user,
             self.AllUsers.last_login,
         )
         return query.all()
 
     def active_users_list(self):
         query = self.session.query(
-            self.AllUsers.name,
-            self.ActiveUsers.ip_address,
-            self.ActiveUsers.port,
-            self.ActiveUsers.login_time
+            self.AllUsers.user,
+            self.ActiveUsers.login_time,
+            self.ActiveUsers.ip,
+            self.ActiveUsers.port
             ).join(self.AllUsers)
         return query.all()
 
-    def login_history(self, username=None):
-        query = self.session.query(self.AllUsers.name,
-                                   self.LoginHistory.date_time,
+    def login_history(self, name=None):
+        query = self.session.query(self.AllUsers.user,
+                                   self.LoginHistory.date_conn,
                                    self.LoginHistory.ip,
                                    self.LoginHistory.port
                                    ).join(self.AllUsers)
-        if username:
-            query = query.filter(self.AllUsers.name == username)
+        if name:
+            query = query.filter(self.AllUsers.user == name)
         return query.all()
 
 
