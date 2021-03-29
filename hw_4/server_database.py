@@ -149,9 +149,9 @@ class ServerDB:
     def active_users_list(self):
         query = self.session.query(
             self.AllUsers.user,
-            self.ActiveUsers.login_time,
             self.ActiveUsers.ip,
-            self.ActiveUsers.port
+            self.ActiveUsers.port,
+            self.ActiveUsers.login_time
             ).join(self.AllUsers)
         return query.all()
 

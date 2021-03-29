@@ -33,7 +33,7 @@ class Client(Thread, metaclass=ClientVerifier):
         self.account_name = account_name
         self.sock = sock
         self.database = database
-        super().__init__()
+        super(Client, self).__init__()
 
     def create_message_exit(self):
         message_exit = {
@@ -47,6 +47,11 @@ class Client(Thread, metaclass=ClientVerifier):
         to = input('Введите получателя сообщения: ')
         message = input('Сообщение: ')
 
+        with database_lock:
+            if not self.database.check_user(to):
+                logger.error(f'Попытка отправить сообщение незарегистрированому получателю: {to}')
+                return
+
         messages = {
             ACTION: MESSAGE,
             SENDER: self.account_name,
@@ -54,11 +59,6 @@ class Client(Thread, metaclass=ClientVerifier):
             TIME: time(),
             MESSAGE_TEXT: message
         }
-
-        with database_lock:
-            if not self.database.check_user(to):
-                logger.error(f'Попытка отправить сообщение незарегистрированому получателю: {to}')
-                return
 
         with database_lock:
             self.database.save_message(self.account_name, to, message)
@@ -90,6 +90,7 @@ class Client(Thread, metaclass=ClientVerifier):
                     except NonDictInputError:
                         logger.error('Соединение завершено с ошибкой')
                     print('Завершение соединения.')
+                sleep(0.5)
                 break
             elif command == 'c':
                 with database_lock:
@@ -101,7 +102,7 @@ class Client(Thread, metaclass=ClientVerifier):
             elif command == 'h':
                 self.print_history_message()
             else:
-                print('\nВведите "h" для справки!\n')
+                print('\nВведите "help" для справки!\n')
 
     def print_history_message(self):
         with database_lock:
@@ -139,7 +140,7 @@ class ClientReader(Thread, metaclass=ClientVerifier):
         self.account_name = account_name
         self.sock = sock
         self.database = database
-        super().__init__()
+        super(ClientReader, self).__init__()
 
     def run(self):
         while True:
@@ -163,6 +164,11 @@ class ClientReader(Thread, metaclass=ClientVerifier):
                             and MESSAGE_TEXT in message and message[DESTINATION] == self.account_name:
                         print(f'\nПолучено сообщение от пользователя {message[SENDER]}:\n{message[MESSAGE_TEXT]}')
                         logger.info(f'Получено сообщение от пользователя {message[SENDER]}:\n{message[MESSAGE_TEXT]}')
+                        with database_lock:
+                            try:
+                                self.database.save_message(message[SENDER], self.account_name, message[MESSAGE_TEXT])
+                            except:
+                                logger.error('Ошибка взаимодействия с базой данных')
                     else:
                         logger.error(f'Получено некорректное сообщение с сервера: {message}')
 
@@ -333,14 +339,13 @@ def main():
         database = ClientDatabase(client_name)
         database_load(transport, database, client_name)
 
-        module = ClientReader(client_name, transport, database)
+        module = Client(client_name, transport, database)
         module.daemon = True
         module.start()
 
-        module_sender = Client(client_name, transport, database)
+        module_sender = ClientReader(client_name, transport, database)
         module_sender.daemon = True
         module_sender.start()
-        logger.debug('Запущены процессы')
 
         while True:
             sleep(1)

@@ -259,7 +259,7 @@ def main():
     def list_update():
         global new_connection
         if new_connection:
-            # main_window.active_clients_table.setModel(gui_create_model(database))
+            main_window.active_clients_table.setModel(gui_create_model(database))
             main_window.active_clients_table.resizeColumnsToContents()
             main_window.active_clients_table.resizeRowsToContents()
             with con_flag_lock:
