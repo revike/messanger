@@ -261,9 +261,10 @@ class ClientMainWindow(QMainWindow):
                                           f'Получено новое сообщение от {sender}, открыть чат с ним?',
                                           QMessageBox.Yes,
                                           QMessageBox.No
-                                          ) != QMessageBox.Yes:
+                                          ) == QMessageBox.Yes:
                     # Если есть, спрашиваем и желании открыть с ним чат и открываем при желании
                     self.current_chat = sender
+                    self.database.save_message(self.current_chat, 'in', decrypted_message.decode('utf-8'))
                     self.set_active_user()
             else:
                 # Раз нету,спрашиваем хотим ли добавить юзера в контакты.

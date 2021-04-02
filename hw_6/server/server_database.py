@@ -210,15 +210,18 @@ class ServerDB:
         self.session.commit()
 
     def add_contact(self, user, contact):
-        user = self.session.query(self.AllUsers).filter_by(user=user).first()
-        contact = self.session.query(self.AllUsers).filter_by(user=contact).first()
+        try:
+            user = self.session.query(self.AllUsers).filter_by(user=user).first()
+            contact = self.session.query(self.AllUsers).filter_by(user=contact).first()
 
-        if self.session.query(self.UsersContacts).filter_by(user=user.id, contact=contact.id).count() or not contact:
-            return
+            if self.session.query(self.UsersContacts).filter_by(user=user.id, contact=contact.id).count() or not contact:
+                return
 
-        contact_row = self.UsersContacts(user.id, contact.id)
-        self.session.add(contact_row)
-        self.session.commit()
+            contact_row = self.UsersContacts(user.id, contact.id)
+            self.session.add(contact_row)
+            self.session.commit()
+        except AttributeError:
+            pass
 
     def remove_contact(self, user, contact):
         user = self.session.query(self.AllUsers).filter_by(user=user).first()
