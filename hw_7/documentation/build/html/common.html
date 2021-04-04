@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Common package &#8212; документация Messenger 0.0.1</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Launcher" href="launcher.html" />
+    <link rel="prev" title="Client module" href="client.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="common-package">
+<h1>Common package<a class="headerlink" href="#common-package" title="Ссылка на этот заголовок">¶</a></h1>
+<p>Пакет общих утилит, использующихся в разных модулях проекта.</p>
+<section id="module-common.decos">
+<span id="decos-py"></span><h2>Скрипт decos.py<a class="headerlink" href="#module-common.decos" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py function">
+<dt id="common.decos.log">
+<code class="sig-prename descclassname"><span class="pre">common.decos.</span></code><code class="sig-name descname"><span class="pre">log</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_to_log</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.decos.log" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Декоратор, выполняющий логирование вызовов функций.
+Сохраняет события типа debug, содержащие
+информацию о имени вызываемой функиции, параметры с которыми
+вызывается функция, и модуль, вызывающий функцию.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="common.decos.login_required">
+<code class="sig-prename descclassname"><span class="pre">common.decos.</span></code><code class="sig-name descname"><span class="pre">login_required</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.decos.login_required" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Декоратор, проверяющий, что клиент авторизован на сервере.
+Проверяет, что передаваемый объект сокета находится в
+списке авторизованных клиентов.
+За исключением передачи словаря-запроса
+на авторизацию. Если клиент не авторизован,
+генерирует исключение TypeError</p>
+</dd></dl>
+
+</section>
+<section id="descryptors-py">
+<h2>Скрипт descryptors.py<a class="headerlink" href="#descryptors-py" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py class">
+<dt id="common.descriptors.Port">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">common.descriptors.</span></code><code class="sig-name descname"><span class="pre">Port</span></code><a class="headerlink" href="#common.descriptors.Port" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - дескриптор для номера порта.
+Позволяет использовать только порты с 1023 по 65536.
+При попытке установить неподходящий номер порта генерирует исключение.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="common.descriptors.Address">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">common.descriptors.</span></code><code class="sig-name descname"><span class="pre">Address</span></code><a class="headerlink" href="#common.descriptors.Address" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - дескриптор для ip адреса.
+При попытке установить неподходящий ip адрес генерирует исключение.</p>
+</dd></dl>
+
+</section>
+<section id="errors-py">
+<h2>Скрипт errors.py<a class="headerlink" href="#errors-py" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py class">
+<dt id="common.errors.ServerError">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">common.errors.</span></code><code class="sig-name descname"><span class="pre">ServerError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.errors.ServerError" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - исключение, для обработки ошибок сервера.
+При генерации требует строку с описанием ошибки,
+полученную с сервера.</p>
+</dd></dl>
+
+</section>
+<section id="metaclasses-py">
+<h2>Скрипт metaclasses.py<a class="headerlink" href="#metaclasses-py" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py class">
+<dt id="common.metaclasses.ServerVerifier">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">common.metaclasses.</span></code><code class="sig-name descname"><span class="pre">ServerVerifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.metaclasses.ServerVerifier" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метакласс, проверяющий что в результирующем классе нет клиентских
+вызовов таких как: connect. Также проверяется, что серверный
+сокет является TCP и работает по IPv4 протоколу.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="common.metaclasses.ClientVerifier">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">common.metaclasses.</span></code><code class="sig-name descname"><span class="pre">ClientVerifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.metaclasses.ClientVerifier" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метакласс, проверяющий что в результирующем классе нет серверных
+вызовов таких как: accept, listen. Также проверяется, что сокет не
+создаётся внутри конструктора класса.</p>
+</dd></dl>
+
+</section>
+<section id="module-common.utils">
+<span id="utils-py"></span><h2>Скрипт utils.py<a class="headerlink" href="#module-common.utils" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py function">
+<dt id="common.utils.get_message">
+<code class="sig-prename descclassname"><span class="pre">common.utils.</span></code><code class="sig-name descname"><span class="pre">get_message</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.utils.get_message" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Функция приёма сообщений от удалённых компьютеров.
+Принимает сообщения JSON, декодирует полученное сообщение
+и проверяет что получен словарь.
+:param client: сокет для передачи данных.
+:return: словарь - сообщение.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="common.utils.send_message">
+<code class="sig-prename descclassname"><span class="pre">common.utils.</span></code><code class="sig-name descname"><span class="pre">send_message</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sock</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.utils.send_message" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Функция отправки словарей через сокет.
+Кодирует словарь в формат JSON и отправляет через сокет.
+:param sock: сокет для передачи
+:param message: словарь для передачи
+:return: ничего не возвращает</p>
+</dd></dl>
+
+</section>
+<section id="variables-py">
+<h2>Скрипт variables.py<a class="headerlink" href="#variables-py" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Содержит разные глобальные переменные проекта.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Messenger</a></h1>
+
+
+
+
+
+
+
+
+<h3>Навигация</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Common package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-common.decos">Скрипт decos.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#descryptors-py">Скрипт descryptors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#errors-py">Скрипт errors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metaclasses-py">Скрипт metaclasses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-common.utils">Скрипт utils.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variables-py">Скрипт variables.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">Launcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logs.html">Logs package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="client.html" title="предыдущая глава">Client module</a></li>
+      <li>Next: <a href="launcher.html" title="следующая глава">Launcher</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Быстрый поиск</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Искать" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Fedorin Evgenii.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/common.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
