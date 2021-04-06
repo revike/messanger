@@ -1,0 +1,10 @@
+.idea
+*.pyc
+__pycache__
+db.sqlite3
+media/
+project/settings.py
+.DS_Store
+venv
+env
+./.env
